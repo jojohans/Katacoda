@@ -49,6 +49,6 @@
     "uilayout": "editor-terminal"
   },
   "backend": {
-    "imageid": "cisco-nso-nso:5.3.2"
+    "imageid": "cisco-nso"
   }
 }
