@@ -9,7 +9,7 @@
       {
         "title": "Setting up NSO",
         "courseData": "setup-intro.sh",
-        "text": "setup-intro.md"
+        "text": "setup.md"
       },
       {
         "title": "Create a netsim compatible NETCONF NED",
