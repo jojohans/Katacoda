@@ -1,0 +1,19 @@
+module ietf-l2vpn-svc-aug {
+  namespace "http://cisco.com/example/ietf-l2vpn-svc-aug";
+  prefix l2vpn-svc-aug;
+  
+  import ietf-l2vpn-svc {
+    prefix l2vpn-svc;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  augment /l2vpn-svc:l2vpn-svc/l2vpn-svc:vpn-services/l2vpn-svc:vpn-service {
+    uses ncs:service-data;
+    ncs:servicepoint l2vpn-servicepoint;
+  }
+}

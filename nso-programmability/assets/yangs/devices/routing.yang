@@ -1,0 +1,201 @@
+module ietf-routing {
+  yang-version "1.1";
+  namespace "urn:example:ethernet";
+  prefix "rt";
+
+  import ietf-yang-types {
+    prefix "yang";
+  }
+
+  import ietf-interfaces {
+    prefix "if";
+  }
+
+  /* Identities */
+
+  identity address-family;
+
+  identity ipv4;
+
+  identity ipv6;
+
+  identity control-plane-protocol;
+
+  identity routing-protocol;
+
+  identity direct;
+
+  identity static;
+
+  /* Type Definitions */
+
+  typedef route-preference {
+    type uint32;
+  }
+
+  /* Groupings */
+
+  grouping address-family {
+    leaf address-family {
+      type identityref {
+        base address-family;
+      }
+      mandatory true;
+    }
+  }
+
+  grouping router-id {
+    leaf router-id {
+      type yang:dotted-quad;
+    }
+  }
+
+  grouping special-next-hop {
+    leaf special-next-hop {
+      type enumeration {
+        enum blackhole;
+        enum unreachable;
+        enum prohibit;
+        enum receive;
+      }
+    }
+  }
+
+  grouping next-hop-content {
+    choice next-hop-options {
+      mandatory true;
+      case simple-next-hop {
+        leaf outgoing-interface {
+          type if:interface-ref;
+      }
+      case special-next-hop {
+        uses special-next-hop;
+      }
+      case next-hop-list {
+        container next-hop-list {
+          list next-hop {
+            key "index";
+            leaf index {
+              type string;
+            }
+            leaf outgoing-interface {
+              type if:interface-ref;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  grouping next-hop-state-content {
+    choice next-hop-options {
+      mandatory true;
+      case simple-next-hop {
+        leaf outgoing-interface {
+          type if:interface-ref;
+        }
+      }
+      case special-next-hop {
+        uses special-next-hop;
+      }
+      case next-hop-list {
+        container next-hop-list {
+          list next-hop {
+            leaf outgoing-interface {
+              type if:interface-ref;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  grouping route-metadata {
+    leaf source-protocol {
+      type identityref {
+        base routing-protocol;
+      }
+      mandatory true;
+    }
+    leaf active {
+      type empty;
+    }
+    leaf last-updated {
+      type yang:date-and-time;
+    }
+  }
+
+  /* Data nodes */
+
+  container routing {
+    uses router-id {
+      if-feature "router-id";
+    }
+    container interfaces {
+      config false;
+      leaf-list interface {
+        type if:interface-ref;
+      }
+    }
+    container control-plane-protocols {
+      list control-plane-protocol {
+        key "type name";
+        leaf type {
+          type identityref {
+            base control-plane-protocol;
+          }
+        }
+        leaf name {
+          type string;
+        }
+        leaf description {
+          type string;
+        }
+        container static-routes {
+          when "derived-from-or-self(../type, 'rt:static')" {
+          }
+        }
+      }
+    }
+    container ribs {
+      list rib {
+        key "name";
+        leaf name {
+          type string;
+        }
+        uses address-family;
+
+        leaf default-rib {
+          if-feature "multiple-ribs";
+          type boolean;
+          default "true";
+          config false;
+        }
+        container routes {
+          config false;
+          list route {
+            leaf route-preference {
+              type route-preference;
+            }
+            container next-hop {
+              uses next-hop-state-content;
+            }
+            uses route-metadata;
+          }
+        }
+        action active-route {
+          output {
+            container route {
+              container next-hop {
+                uses next-hop-state-content;
+              }
+              uses route-metadata;
+            }
+          }
+        }
+        leaf description {
+          type string;
+      }
+    }
+  }
+}

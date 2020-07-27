@@ -1,0 +1,148 @@
+module interfaces {
+  yang-version 1.1;
+  namespace "urn:example:interfaces";
+  prefix if;
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import ietf-yang-types {
+       prefix yang;
+  }
+
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  identity interface-type {
+    description
+      "Base identity from which specific interface types are
+       derived.";
+  }
+
+  typedef interface-ref {
+    type leafref {
+      path "/if:interfaces/if:interface/if:name";
+    }
+  }
+
+  container interfaces {
+    list interface {
+      key "name";
+      leaf name {
+        type string;
+      }
+      leaf description {
+        type string;
+      }
+      leaf type {
+        type identityref {
+          base interface-type;
+        }
+        mandatory true;
+      }
+      leaf enabled {
+        type boolean;
+        mandatory true;
+      }
+      leaf oper-status {
+        type enumeration {
+          enum up {
+            value 1;
+          }
+          enum down {
+            value 2;
+          }
+          enum unknown {
+            value 3;
+          }
+          enum lower-layer-down {
+            value 4;
+          }
+        }
+        config false;
+        mandatory true;
+      }
+    }
+    leaf phys-address {
+      type yang:phys-address;
+      config false;
+    }
+    //leaf-list higher-layer-if {
+    //  type interface-ref;
+    //  config false;
+    //}
+    //
+    //leaf-list lower-layer-if {
+    //  type interface-ref;
+    //  config false;
+    //}
+    leaf speed {
+      type yang:gauge64;
+      units "bits/second";
+      config false;
+    }
+
+    //container statistics {
+    //  config false;
+    //
+    //  leaf discontinuity-time {
+    //    type yang:date-and-time;
+    //    mandatory true;
+    //  }
+    //
+    //  leaf in-octets {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf in-unicast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf in-broadcast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf in-multicast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf in-discards {
+    //    type yang:counter32;
+    //  }
+    //
+    //  leaf in-errors {
+    //    type yang:counter32;
+    //  }
+    //
+    //  leaf in-unknown-protos {
+    //    type yang:counter32;
+    //  }
+    //
+    //  leaf out-octets {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf out-unicast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf out-broadcast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf out-multicast-pkts {
+    //    type yang:counter64;
+    //  }
+    //
+    //  leaf out-discards {
+    //    type yang:counter32;
+    //  }
+    //
+    //  leaf out-errors {
+    //    type yang:counter32;
+    //  }
+    //}
+  }
+}

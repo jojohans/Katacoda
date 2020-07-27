@@ -1,0 +1,54 @@
+{
+  "title": "NETCONF and YANG Programmability with NSO",
+  "icon": "fa-nso",
+  "description": "A first introduction NETCONF and YANG programmability with NSO and ConfD",
+  "difficulty" : "medium",
+  "time" : "15-30 minutes",
+  "details": {
+    "steps": [
+      {
+        "title": "Setting up NSO",
+        "courseData": "setup-intro.sh",
+        "text": "setup-intro.md"
+      },
+      {
+        "title": "Create a netsim compatible NETCONF NED",
+        "text": "netsim.md"
+      },
+      {
+        "title": "Setting up NSO",
+        "text": "setup.md"
+      },
+      {
+        "title": "Investigate network wide transactions",
+        "text": "network-wide-transactions.md"
+      },
+      {
+        "title": "A deeper look at what's going on during transactions",
+        "text": "look-at-what-is-going-on.md"
+      },
+      {
+        "title": "How to go about extending NEDs",
+        "text": "extending-neds.md"
+      },
+      {
+        "title": "Create a service application.",
+        "text": "service-application.md"
+      }
+    ],
+    "intro": {
+      "text": "intro.md",
+      "credits": "NSO DevNet page: https://developer.cisco.com/docs/nso/"
+    },
+    "finish": {
+      "text": "finish.md"
+    }
+  },
+  "files": [],
+  "environment": {
+    "uilayout": "editor-terminal"
+  },
+  "backend": {
+    "imageid": "cisco-nso"
+  }
+}

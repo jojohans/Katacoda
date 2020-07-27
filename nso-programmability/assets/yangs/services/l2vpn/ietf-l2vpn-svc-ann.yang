@@ -1,0 +1,17 @@
+module ietf-l2vpn-svc-ann {
+  namespace "http://cisco.com/example/ietf-l2vpn-svc-ann";
+  prefix l2vpn-svc-ann;
+  
+  import ietf-l2vpn-svc {
+    prefix l2vpn-svc;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  tailf:annotate /l2vpn-svc:l2vpn-svc/l2vpn-svc:vpn-services/l2vpn-svc:vpn-service {
+  }
+}

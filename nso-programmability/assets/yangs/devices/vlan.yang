@@ -1,0 +1,45 @@
+module vlan {
+  yang-version 1.1;
+  namespace "urn:example:vlan";
+  prefix "vlan";
+
+  import interfaces {
+    prefix if;
+  }
+  import iana-if-type {
+    prefix ianaift;
+  }
+
+  augment "/if:interfaces/if:interface" {
+    when "if:type = 'ianaift:ethernetCsmacd' or
+          if:type = 'ianaift:ieee8023adLag'";
+    leaf vlan-tagging {
+      type boolean;
+      default false;
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    when "if:type = 'ianaift:l2vlan'";
+
+    leaf base-interface {
+      type if:interface-ref;
+      must "/if:interfaces/if:interface[if:name = current()]"
+         + "/vlan:vlan-tagging = 'true'" {
+        description
+          "The base interface must have VLAN tagging enabled.";
+      }
+    }
+    leaf vlan-id {
+      type uint16 {
+        range "1..4094";
+      }
+
+      must "../base-interface" {
+        description
+          "If a vlan-id is defined, a base-interface must
+           be specified.";
+      }
+    }
+  }
+}

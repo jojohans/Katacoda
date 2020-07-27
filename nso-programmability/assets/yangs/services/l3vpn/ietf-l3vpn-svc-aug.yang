@@ -1,0 +1,22 @@
+module ietf-l3vpn-svc-aug {
+  namespace "http://cisco.com/example/ietf-l3vpn-svc-aug";
+  prefix l3vpn-svc-aug;
+  
+  import ietf-l3vpn-svc {
+    prefix l3vpn-svc;
+  }
+  import tailf-common {
+    prefix tailf;
+  }
+  import tailf-ncs {
+    prefix ncs;
+  }
+
+  augment /l3vpn-svc:l3vpn-svc/l3vpn-svc:vpn-services/l3vpn-svc:vpn-service {
+    uses ncs:service-data;
+    ncs:servicepoint l3vpn-servicepoint;
+    leaf phase {
+      type uint32;
+    }
+  }
+}

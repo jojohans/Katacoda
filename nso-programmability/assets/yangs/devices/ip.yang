@@ -1,0 +1,129 @@
+module ip {
+  yang-version "1.1";
+  namespace "urn:example:ip";
+  prefix ip;
+
+  import interfaces {
+    prefix if;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  typedef ip-address-origin {
+    type enumeration {
+      enum other;
+      enum static;
+      enum dhcp;
+      enum link-layer;
+    }
+  }
+
+  typedef neighbor-origin {
+    type enumeration {
+      enum other;
+      enum static;
+      enum dynamic;
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    container ipv4 {
+      presence "Enables IPv4.";
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+      leaf forwarding {
+        type boolean;
+        default false;
+      }
+      leaf mtu {
+        type uint16 {
+          range "68..max";
+        }
+        units "octets";
+      }
+      list address {
+        key "ip";
+        leaf ip {
+          type inet:ipv4-address-no-zone;
+        }
+        choice subnet {
+          mandatory true;
+          leaf prefix-length {
+            type uint8 {
+              range "0..32";
+            }
+          }
+        }
+        leaf origin {
+          type ip-address-origin;
+          config false;
+      }
+      list neighbor {
+        key "ip";
+        leaf ip {
+          type inet:ipv4-address-no-zone;
+        }
+        leaf link-layer-address {
+          type yang:phys-address;
+          mandatory true;
+        }
+        leaf origin {
+          type neighbor-origin;
+          config false;
+        }
+      }
+    }
+
+    container ipv6 {
+      presence
+        "Enables IPv6 unless the 'enabled' leaf
+         (which defaults to 'true') is set to 'false'";
+
+      leaf enabled {
+        type boolean;
+        default true;
+      leaf forwarding {
+        type boolean;
+        default false;
+      }
+      leaf mtu {
+        type uint32 {
+          range "1280..max";
+        }
+        units "octets";
+      }
+
+      list address {
+        key "ip";
+        description
+          "The list of IPv6 addresses on the interface.";
+
+        leaf ip {
+          type inet:ipv6-address-no-zone;
+          description
+            "The IPv6 address on the interface.";
+        }
+        leaf prefix-length {
+          type uint8 {
+            range "0..128";
+          }
+          mandatory true;
+          description
+            "The length of the subnet prefix.";
+        }
+        leaf origin {
+          type ip-address-origin;
+          config false;
+          description
+            "The origin of this address.";
+        }
+      }
+    }
+  }
+}

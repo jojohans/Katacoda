@@ -1,0 +1,71 @@
+module network-instance {
+  yang-version "1.1";
+  namespace "urn:example:network-instance";
+  prefix ni;
+
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import tailf-common {
+    prefix tailf;
+  }
+
+  import interfaces {
+    prefix if;
+  }
+
+  import ip {
+    prefix ip;
+  }
+
+  revision 2020-04-22 {
+    description "Initial revision.";
+  }
+
+  container network-instances {
+    list network-instance {
+      key "name";
+      leaf name {
+        type string;
+      }
+      leaf enabled {
+        type boolean;
+        default true;
+      }
+      choice ni-type {
+        container vrf {}
+        container vsi {}
+        container vv {}
+      }
+    }
+  }
+
+  augment "/if:interfaces/if:interface" {
+    leaf bind-ni-name {
+      type leafref {
+        path "/network-instances/network-instance/name";
+      }
+      description
+        "Network instance to which an interface is bound.";
+    }
+  }
+  augment "/if:interfaces/if:interface/ip:ipv4" {
+    leaf bind-ni-name {
+      type leafref {
+        path "/network-instances/network-instance/name";
+      }
+      description
+        "Network instance to which IPv4 interface is bound.";
+    }
+  }
+  augment "/if:interfaces/if:interface/ip:ipv6" {
+    leaf bind-ni-name {
+      type leafref {
+        path "/network-instances/network-instance/name";
+      }
+      description
+        "Network instance to which IPv6 interface is bound.";
+    }
+  }
+}

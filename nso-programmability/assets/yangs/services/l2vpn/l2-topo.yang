@@ -1,0 +1,32 @@
+module l2-topo {
+  namespace "http://example.com/katacoda/l2-topology";
+  prefix l2-topo;
+
+  import tailf-ncs {
+    prefix ncs;
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+
+  list topo-l2 {
+    key "vpn-name device-name";
+    leaf vpn-name {
+      type string;
+    }
+    leaf device-name {
+      type leafref {
+        path /ncs:devices/ncs:device/ncs:name;
+      }
+    }
+    leaf interface {
+      type string;
+    }
+    leaf router-id {
+      type inet:ipv4-address;
+    }
+    //leaf locator {
+    //  type string;
+    //}
+  }
+}

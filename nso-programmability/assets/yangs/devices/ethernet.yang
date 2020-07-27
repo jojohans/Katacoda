@@ -1,0 +1,57 @@
+module ethernet {
+  yang-version 1.1;
+  namespace "urn:example:ethernet";
+  prefix eth;
+
+  import interfaces {
+    prefix if;
+  }
+  import iana-if-type {
+    prefix ianaift;
+  }
+
+  augment "/if:interfaces/if:interface" {
+    when "if:type = 'ianaift:ethernetCsmacd'";
+
+    container ethernet {
+      container transmission {
+        choice transmission-params {
+          case auto {
+            leaf auto-negotiate {
+              type empty;
+            }
+          }
+          case manual {
+            container manual {
+              leaf duplex {
+                type enumeration {
+                  enum "half";
+                  enum "full";
+                }
+              }
+              leaf speed {
+                type enumeration {
+                  enum "10Mb";
+                  enum "100Mb";
+                  enum "1Gb";
+                  enum "10Gb";
+                }
+              }
+              leaf flow-control {
+                type boolean;
+              }
+            }
+          }
+        }
+        leaf duplex {
+          type enumeration {
+            enum "half";
+            enum "full";
+          }
+          config false;
+        }
+      }
+      // other Ethernet-specific params...
+    }
+  }
+}
